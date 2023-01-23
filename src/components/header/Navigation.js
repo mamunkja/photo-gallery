@@ -1,16 +1,49 @@
-import React from "react";
-import { Navbar, NavbarBrand } from "reactstrap";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem } from "reactstrap";
 
-const Navigation = () => {
-    return (
-        <div>
-            <Navbar dark color="dark">
-                <div className="container">
-                    <NavbarBrand href="/">Restaurent</NavbarBrand>
-                </div>
-            </Navbar>
-        </div>
-    )
+class Navigation extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isNavOpen: false
+        }
+    }
+
+    navToggle = () => {
+        this.setState({
+            isNavOpen: !this.state.isNavOpen
+        });
+    }
+
+    render() {
+        return (
+            <div>
+                <Navbar dark color="dark" expand="sm">
+                    <div className="container">
+                        <NavbarToggler onClick={this.navToggle} />
+                        <NavbarBrand href="/">Restaurent</NavbarBrand>
+                        <Collapse isOpen={this.state.isNavOpen} navbar>
+                            <Nav className="mr-auto" navbar>
+                                <NavItem>
+                                    <Link to="/" className="nav-link active">Home</Link>
+                                </NavItem>
+                                <NavItem>
+                                    <Link to="/menu" className="nav-link">Menu</Link>
+                                </NavItem>
+                                <NavItem>
+                                    <Link to="/about" className="nav-link">About</Link>
+                                </NavItem>
+                                <NavItem>
+                                    <Link to="/contact" className="nav-link">Contact</Link>
+                                </NavItem>
+                            </Nav>
+                        </Collapse>
+                    </div>
+                </Navbar>
+            </div>
+        );
+    }
 }
 
 export default Navigation;

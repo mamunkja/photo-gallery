@@ -2,13 +2,16 @@ import React from "react";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import Body from "./body/Body";
+import { BrowserRouter } from "react-router-dom";
 
 const MainComponent = () => {
     return (
         <div>
-            <Header />
-            <Body />
-            <Footer />
+            <BrowserRouter>
+                <Header />
+                <Body />
+                <Footer />
+            </BrowserRouter>
         </div>
     )
 }
