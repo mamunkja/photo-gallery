@@ -8,6 +8,7 @@ const Comments = (props) => {
                 <div key={comment.id}>
                     <h5>{comment.author}</h5>
                     <p>{comment.comment}</p>
+                    <p>Rating: {comment.rating}*</p>
                     <p>{dateFormat(comment.date, "mmmm dd, yyyy")}</p>
                 </div>
             );
