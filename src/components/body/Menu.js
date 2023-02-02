@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import DishDetail from "./DishDetail";
 import MenuItem from "./MenuItem";
-import { Button, CardColumns, Modal, ModalBody, ModalFooter } from "reactstrap";
+import { Alert, Button, CardColumns, Modal, ModalBody, ModalFooter } from "reactstrap";
 import { connect } from "react-redux";
-import { addComment, fetchDishes } from "../../redux/actionCreators";
+import { addComment, fetchComments, fetchDishes } from "../../redux/actionCreators";
 import Loading from "./Loading";
 
 const mapStateToProps = state => {
@@ -16,7 +16,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         addComment: (dishId, author, rating, comment) => dispatch(addComment(dishId, author, rating, comment)),
-        fetchDishes: () => dispatch(fetchDishes())
+        fetchDishes: () => dispatch(fetchDishes()),
+        fetchComments: () => dispatch(fetchComments())
     }
 }
 
@@ -41,13 +42,17 @@ class Menu extends Component {
 
     componentDidMount() {
         this.props.fetchDishes();
+        this.props.fetchComments();
     }
 
     render() {
         document.title = "Menu";
         if (this.props.dishes.isLoading) {
             return <div><div><Loading /></div></div>;
-        } else {
+        } else if (this.props.dishes.errMess != null) {
+            return <Alert color="danger">{this.props.dishes.errMess}</Alert>
+        }
+        else {
             const menu = this.props.dishes.dishes.map(item => {
                 return (
                     <MenuItem key={item.id} dish={item}
@@ -58,10 +63,11 @@ class Menu extends Component {
             let dishDetail = null;
 
             if (this.state.selectedDish != null) {
-                const comments = this.props.comments.filter(comment => comment.dishId === this.state.selectedDish.id);
+                const comments = this.props.comments.comments.filter(comment => comment.dishId === this.state.selectedDish.id);
 
                 dishDetail = <DishDetail dish={this.state.selectedDish}
-                    comments={comments} addComment={this.props.addComment} />
+                    comments={comments} addComment={this.props.addComment}
+                    commentsIsLoading={this.props.comments.isLoading} />
             }
 
             return (
