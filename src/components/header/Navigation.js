@@ -22,20 +22,20 @@ class Navigation extends Component {
                 <Navbar dark color="dark" expand="sm">
                     <div className="container">
                         <NavbarToggler onClick={this.navToggle} />
-                        <NavbarBrand href="/">Restaurent</NavbarBrand>
+                        <NavbarBrand href="/">Photo Gallery</NavbarBrand>
                         <Collapse isOpen={this.state.isNavOpen} navbar>
                             <Nav className="mr-auto" navbar>
                                 <NavItem>
                                     <Link to="/" className="nav-link active">Home</Link>
                                 </NavItem>
                                 <NavItem>
-                                    <Link to="/menu" className="nav-link">Menu</Link>
+                                    <Link to="/city" className="nav-link">Beautiful City</Link>
                                 </NavItem>
                                 <NavItem>
-                                    <Link to="/about" className="nav-link">About</Link>
+                                    <Link to="/natural" className="nav-link">Natural</Link>
                                 </NavItem>
                                 <NavItem>
-                                    <Link to="/contact" className="nav-link">Contact</Link>
+                                    <Link to="/winter" className="nav-link">Winter</Link>
                                 </NavItem>
                             </Nav>
                         </Collapse>
