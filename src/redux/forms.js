@@ -1,9 +1,19 @@
-export const InitialContactForm = {
-    firstName: '',
-    lastName: '',
+export const InitialSignupForm = {
+    name: '',
     telNum: '',
-    email: '',
-    agree: false,
-    contactType: 'Tel.',
-    message: ''
+    email: ''
+}
+
+export const InitialLoginForm = {
+    telNum: '',
+    email: ''
+}
+
+export const InitialCommentForm = {
+    author: '',
+    imageId: '',
+    categoryId: '',
+    rating: '',
+    comment: '',
+    date: ''
 }

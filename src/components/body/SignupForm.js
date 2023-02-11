@@ -7,8 +7,8 @@ import { baseUrl } from "../../redux/baseUrl";
 
 const mapDispatchToProps = dispatch => {
     return {
-        resetFeedbackForm: () => {
-            dispatch(actions.reset('feedback'))
+        resetSignupForm: () => {
+            dispatch(actions.reset('signup'))
         }
     }
 }
@@ -17,30 +17,30 @@ const required = val => val && val.length;
 const isNumber = val => !isNaN(Number(val));
 const validEmail = val => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
 
-class Contact extends Component {
+class SignupForm extends Component {
     state = {
         showAlert: false,
         alertText: null,
-        alertType: null
+        alertType: null,
+        userName: null
     }
 
     handleSubmit = values => {
-        axios.post(baseUrl + "feedback", values)
+        console.log(values);
+        axios.post(baseUrl + "signup", values)
             .then(response => response.status)
             .then(status => {
-                if (status == 201) {
+                if (status === 201) {
                     this.setState({
                         showAlert: true,
                         alertType: "success",
-                        alertText: "Submitted Successfully!"
+                        alertText: "Sign Up Successfully! Welcome " + values.name + " ! to photo gallery you can now comment on photos."
                     });
-
-
                     setTimeout(() => this.setState({
                         showAlert: false
-                    }), 3000);
+                    }), 5000);
 
-                    this.props.resetFeedbackForm();
+                    this.props.resetSignupForm();
                 }
             })
             .catch(error => {
@@ -56,51 +56,30 @@ class Contact extends Component {
     }
 
     render() {
-        document.title = "Contact";
+        document.title = "Sign Up Form";
         return (
             <div className="container">
                 <div className="row row-content" style={{ paddingLeft: "20px", textAlign: "left" }}>
                     <div className="col-12">
-                        <Alert isOpen={this.state.showAlert} color={this.state.alertType}>{this.state.alertText}</Alert>
-                        <h3>Send us your feedback</h3>
+                        <Alert isOpen={this.state.showAlert} color={this.state.alertType}>{this.state.alertText + " " + this.state.userName}</Alert>
+                        <h3>Sign Up</h3>
                     </div>
                     <div className="col-12 col-md-7">
-                        <Form model="feedback" onSubmit={values => this.handleSubmit(values)}>
+                        <Form model="signup" onSubmit={values => this.handleSubmit(values)}>
                             <FormGroup row>
-                                <Label htmlFor="firstName" md={2}>First Name</Label>
+                                <Label htmlFor="name" md={2}>First Name</Label>
                                 <Col md={10}>
                                     <Control.text
-                                        model=".firstName"
-                                        name="firstName"
-                                        placeholder="First Name"
+                                        model=".name"
+                                        name="name"
+                                        placeholder="Name"
                                         className="form-control"
                                         validators={{
                                             required
                                         }} />
                                     <Errors
                                         className="text-danger"
-                                        model=".firstName"
-                                        show="touched"
-                                        messages={
-                                            {
-                                                required: "Required"
-                                            }
-                                        }
-                                    />
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Label htmlFor="lastName" md={2}>Last Name</Label>
-                                <Col md={10}>
-                                    <Control.text model=".lastName"
-                                        name="lastName" placeholder="Last Name"
-                                        className="form-control"
-                                        validators={{
-                                            required
-                                        }} />
-                                    <Errors
-                                        className="text-danger"
-                                        model=".lastName"
+                                        model=".name"
                                         show="touched"
                                         messages={
                                             {
@@ -152,48 +131,10 @@ class Contact extends Component {
                                     />
                                 </Col>
                             </FormGroup>
-                            <FormGroup row>
-                                <Col md={{ size: 6, offset: 2 }} >
-                                    <FormGroup check>
-                                        <Label check>
-                                            <Control.checkbox model=".agree" name="agree"
-                                                className="form-check-input" />
-                                            <strong> May we contact you? </strong>
-                                        </Label>
-                                    </FormGroup>
-                                </Col>
-                                <Col md={{ size: 3, offset: 1 }}>
-                                    <Control.select model=".contactType" name="contactType"
-                                        className="form-control" >
-                                        <option>Tel.</option>
-                                        <option>Email</option>
-                                    </Control.select>
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Label htmlFor="message" md={2}>Your feedback </Label>
-                                <Col md={10}>
-                                    <Control.textarea model=".message" name="message"
-                                        rows="12" className="form-control"
-                                        validators={{
-                                            required
-                                        }} />
-                                    <Errors
-                                        className="text-danger"
-                                        model=".message"
-                                        show="touched"
-                                        messages={
-                                            {
-                                                required: "Required"
-                                            }
-                                        }
-                                    />
-                                </Col>
-                            </FormGroup>
                             <FormGroup>
                                 <Col md={{ size: 10, offset: 2 }} >
                                     <Button type="submit" color="primary">
-                                        Send feedback
+                                        Sign up
                                     </Button>
                                 </Col>
                             </FormGroup>
@@ -205,4 +146,4 @@ class Contact extends Component {
     }
 }
 
-export default connect(null, mapDispatchToProps)(Contact);
+export default connect(null, mapDispatchToProps)(SignupForm);

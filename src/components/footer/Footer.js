@@ -2,7 +2,9 @@ import React from "react";
 
 const Footer = () => {
     return (
+
         <div className="footer">
+            <hr />
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="cl-auto">

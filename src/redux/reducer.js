@@ -1,33 +1,61 @@
 import { combineReducers } from "redux";
 import * as actionType from "./actionTypes";
-import { InitialContactForm } from "./forms";
+import { InitialCommentForm, InitialLoginForm, InitialSignupForm } from "./forms";
 import { createForms } from "react-redux-form";
 
-const dishReducer = (dishState = { isLoading: false, dishes: [], errMess: null }, action) => {
+const galleryReducer = (galleryState = { isLoading: false, galleries: [], errMess: null }, action) => {
     switch (action.type) {
-        case actionType.DISHES_LOADING:
+        case actionType.GALLERIES_LOADING:
             return {
-                ...dishState,
+                ...galleryState,
                 isLoading: true,
                 errMess: null,
-                dishes: []
+                galleries: []
             }
-        case actionType.LOAD_DISHES:
+        case actionType.LOAD_GALLERIES:
             return {
-                ...dishState,
+                ...galleryState,
                 isLoading: false,
                 errMess: null,
-                dishes: action.payload
+                galleries: action.payload
             }
-        case actionType.DISHES_FAILED:
+        case actionType.GALLERIES_FAILED:
             return {
-                ...dishState,
+                ...galleryState,
                 isLoading: false,
                 errMess: action.payload,
-                dishes: []
+                galleries: []
             }
         default:
-            return dishState;
+            return galleryState;
+    }
+}
+
+const categoryReducer = (categoryState = { isLoading: false, categories: [], errMess: null }, action) => {
+    switch (action.type) {
+        case actionType.CATEGORIES_LOADING:
+            return {
+                ...categoryState,
+                isLoading: true,
+                errMess: null,
+                categories: []
+            }
+        case actionType.LOAD_CATEGORIES:
+            return {
+                ...categoryState,
+                isLoading: false,
+                errMess: null,
+                categories: action.payload
+            }
+        case actionType.CATEGORIES_FAILED:
+            return {
+                ...categoryState,
+                isLoading: false,
+                errMess: action.payload,
+                categories: []
+            }
+        default:
+            return categoryState;
     }
 }
 
@@ -46,21 +74,51 @@ const commentReducer = (commentState = { isLoading: true, comments: [] }, action
                 comments: []
             }
         case actionType.ADD_COMMENT:
-            let comment = action.payload;
             return {
                 ...commentState,
-                comments: commentState.comments.concat(comment)
+                comments: commentState.comments.concat(action.payload)
             }
         default:
             return commentState;
     }
 }
 
+const loggedUserReducer = (loggedUserState = [], action) => {
+    switch (action.type) {
+        case actionType.LOAD_LOGGEDIN_USER:
+            return {
+                ...loggedUserState,
+                loggedUsers: action.payload
+            };
+        case actionType.ADD_LOGGED_USER:
+            return {
+                ...loggedUserState,
+                loggedUsers: action.payload
+            };
+        case actionType.LOGGEDIN_USER_FAILED:
+            return {
+                ...loggedUserState,
+                errMess: action.payload,
+                loggedUsers: []
+            }
+        default:
+            return loggedUserState;
+    }
+}
+
 const Reducer = combineReducers({
-    dishes: dishReducer,
+    galleries: galleryReducer,
     comments: commentReducer,
+    categories: categoryReducer,
+    loggedUsers: loggedUserReducer,
     ...createForms({
-        feedback: InitialContactForm
+        signup: InitialSignupForm
+    }),
+    ...createForms({
+        login: InitialLoginForm
+    }),
+    ...createForms({
+        commentForm: InitialCommentForm
     })
 })
 
