@@ -11,8 +11,7 @@ export const addComment = (galleryId, author, rating, comment) => dispatch => {
         date: new Date().toISOString()
     }
     axios.post(baseUrl + "comments", newComment)
-        .then(response => response.data)
-        .then(comment => dispatch(commentAdd(comment)))
+        .then(response => dispatch(commentAdd(response.data)))
 }
 
 export const commentAdd = comment => ({
@@ -35,8 +34,7 @@ export const galleriesFailed = (errMessage) => ({
 export const fetchGalleries = () => dispatch => {
     dispatch(galleriesLoading());
     axios.get(baseUrl + "galleries")
-        .then(response => response.data)
-        .then(galleries => dispatch(loadGalleries(galleries)))
+        .then(response => dispatch(loadGalleries(response.data)))
         .catch(error => {
             dispatch(galleriesFailed(error.message))
         })
@@ -57,8 +55,7 @@ export const categoriesFailed = (errMessage) => ({
 export const fetchCategories = () => dispatch => {
     dispatch(categoriesLoading());
     axios.get(baseUrl + "categories")
-        .then(response => response.data)
-        .then(categories => dispatch(loadCategories(categories)))
+        .then(response => dispatch(loadCategories(response.data)))
         .catch(error => {
             dispatch(galleriesFailed(error.message))
         })
@@ -79,16 +76,15 @@ export const commentsFailed = (errMessage) => ({
 export const fetchComments = () => dispatch => {
     dispatch(commentsLoading());
     axios.get(baseUrl + "comments")
-        .then(response => response.data)
-        .then(comments => dispatch(loadComments(comments)))
+        .then(response => dispatch(loadComments(response.data)))
         .catch(error => {
             dispatch(commentsFailed(error.message))
         })
 }
 
-export const loadingLoggedInUser = (loggedUsers) => ({
+export const loadingLoggedInUser = (loggedUser) => ({
     type: actionType.LOAD_LOGGEDIN_USER,
-    payload: loggedUsers
+    payload: loggedUser
 })
 
 export const loadingLoggedUserFailed = (errMessage) => ({
@@ -98,14 +94,15 @@ export const loadingLoggedUserFailed = (errMessage) => ({
 
 export const fetchLoggedInUser = () => dispatch => {
     axios.get(baseUrl + "logged")
-        .then(response => response.data)
-        .then(loggedUsers => dispatch(loadingLoggedInUser(loggedUsers)))
+        .then(response => {
+            dispatch(loadingLoggedInUser(response.data))
+        })
         .catch(error => {
             dispatch(loadingLoggedUserFailed(error.message))
         })
 }
 
-export const addToLoggedUser = (name, telNum, email) => dispatch => {
+export const addToLoggedUser = (name, telNum, email, id) => dispatch => {
     const newUser = {
         name: name,
         telNum: telNum,
@@ -113,14 +110,24 @@ export const addToLoggedUser = (name, telNum, email) => dispatch => {
         date: new Date().getTime()
     };
     axios.post(baseUrl + "logged", newUser)
-        .then(response => response.data)
-        .then(user => {
+        .then(response => {
             dispatch({
                 type: actionType.ADD_LOGGED_USER,
-                payload: user
+                payload: { ...newUser, id }
             })
         })
+        .catch(error => {
+            dispatch(loadingLoggedUserFailed(error.message))
+        })
+}
 
+export const logout = (id) => dispatch => {
+    axios.delete(baseUrl + "logged/" + id)
+        .then(response => {
+            dispatch({
+                type: actionType.LOGOUT_USER
+            })
+        })
         .catch(error => {
             dispatch(loadingLoggedUserFailed(error.message))
         })

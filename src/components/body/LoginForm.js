@@ -10,8 +10,7 @@ import { addToLoggedUser } from "../../redux/actionCreators";
 const mapDispatchToProps = dispatch => {
     return {
         resetLoginForm: () => dispatch(actions.reset('login')),
-        //fetchLoggedInUser: () => dispatch(fetchLoggedInUser()),
-        addToLoggedUser: (name, telNum, email) => dispatch(addToLoggedUser(name, telNum, email))
+        addToLoggedUser: (name, telNum, email, id) => dispatch(addToLoggedUser(name, telNum, email, id))
     }
 }
 
@@ -29,29 +28,17 @@ class LoginForm extends Component {
 
     handleSubmit = values => {
         axios.get(baseUrl + "signup")
-            .then(response => response)
             .then(response => {
                 if (response.status === 200) {
                     let data = response.data;
-                    for (var i = 0; i < data.length; i++) {
+                    for (let i = 0; i < data.length; i++) {
                         if (data[i].telNum === values.telNum && data[i].email === values.email) {
-                            this.setState({
-                                showAlert: true,
-                                alertType: "success",
-                                alertText: "Logged in Successfully! Welcome " + data[i].name + "! to photo gallery you can now comment on photos."
-                            });
                             axios.get(baseUrl + "logged")
-                                .then(response => response)
                                 .then(response => {
-                                    if (response.status === 200 & response.data.length !== 0) {
-                                        let data = response.data;
-                                        for (var j = 0; i < data.length; j++) {
-                                            if (data[j].telNum === values.telNum && data[j].email === values.email) {
-                                                this.props.addToLoggedUser(data[j].name, values.telNum, values.email);
-                                            }
+                                    if (response.status === 200 && response.data.length === 0) {
+                                        if (data[i].telNum === values.telNum && data[i].email === values.email) {
+                                            this.props.addToLoggedUser(data[i].name, values.telNum, values.email, data[i].id);
                                         }
-                                    } else {
-                                        this.props.addToLoggedUser(data[i].name, values.telNum, values.email);
                                     }
                                 })
                                 .catch(error => {
@@ -64,10 +51,15 @@ class LoginForm extends Component {
                                         showAlert: false
                                     }), 3000);
                                 })
+                            this.setState({
+                                showAlert: true,
+                                alertType: "success",
+                                alertText: "Logged in Successfully! Welcome " + data[i].name + "! to photo gallery you can now comment on photos."
+                            });
 
                             setTimeout(() => this.setState({
                                 showAlert: false,
-                                redir: <Navigate to="/" replace={false} />
+                                redir: <Navigate to="/home" replace={false} />
                             }), 4000);
                             this.props.resetLoginForm();
                             break;

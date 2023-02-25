@@ -83,12 +83,18 @@ const commentReducer = (commentState = { isLoading: true, comments: [] }, action
     }
 }
 
-const loggedUserReducer = (loggedUserState = [], action) => {
+const loggedUserReducer = (loggedUserState = { loggedUsers: null }, action) => {
     switch (action.type) {
         case actionType.LOAD_LOGGEDIN_USER:
+            if (action.payload.length === 0) {
+                return {
+                    ...loggedUserState,
+                    loggedUsers: null
+                };
+            }
             return {
                 ...loggedUserState,
-                loggedUsers: action.payload
+                loggedUsers: action.payload[0]
             };
         case actionType.ADD_LOGGED_USER:
             return {
@@ -99,7 +105,12 @@ const loggedUserReducer = (loggedUserState = [], action) => {
             return {
                 ...loggedUserState,
                 errMess: action.payload,
-                loggedUsers: []
+                loggedUsers: null
+            }
+        case actionType.LOGOUT_USER:
+            return {
+                ...loggedUserState,
+                loggedUsers: null
             }
         default:
             return loggedUserState;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, CardColumns } from "reactstrap";
+import { Alert } from "reactstrap";
 import { connect } from "react-redux";
 import { fetchGalleries, fetchCategories } from "../../redux/actionCreators";
 import Loading from "./Loading";
@@ -48,18 +48,10 @@ class Category extends Component {
         else if (this.props.galleries.errMess !== null) {
             return <Alert color="danger">{this.props.galleries.errMess}</Alert>
         }
-        else if (this.props.catId !== 0) {
-            categoryItem = this.props.categories.categories.filter(item => item.galleryId === this.props.catId);
-            return (
-                <CategoryItem category={categoryItem} />
-            )
-        }
-        else if (this.state.selectedGallery !== null) {
+        if (this.state.selectedGallery !== null) {
             const catId = this.state.selectedGallery.id;
             categoryItem = this.props.categories.categories.filter(item => item.galleryId === catId);
-            return (
-                <CategoryItem category={categoryItem} />
-            )
+            categoryItem = <CategoryItem category={categoryItem} />;
         }
         galleryItems = this.props.galleries.galleries.map(item => {
             return (
@@ -71,15 +63,13 @@ class Category extends Component {
         return (
             <div className="container" >
                 <div className="row">
-                    <div className="col-6">
-                        <CardColumns>
-                            {galleryItems}
-                        </CardColumns>
+                    <span style={{ marginLeft: "10px", textAlign: "left", fontWeight: "bold" }}>Gallery</span>
+                    <div className="col-4">
+                        {galleryItems}
                     </div>
-                    <div className="col-6">
-                        <CardColumns>
-                            {categoryItem}
-                        </CardColumns>
+                    <div className="col-8">
+                        <span style={{ textAlign: "left", fontWeight: "bold" }}>Category</span>
+                        {categoryItem}
                     </div>
                 </div>
             </div>

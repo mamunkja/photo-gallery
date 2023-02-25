@@ -1,44 +1,62 @@
-import React from "react";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Card, CardBody, CardImg, CardText, CardTitle } from "reactstrap";
+import { Card, CardBody, CardColumns, CardFooter, CardImg, CardImgOverlay, CardText, CardTitle } from "reactstrap";
 import { baseUrl } from "../../redux/baseUrl";
 import CommentForm from "./CommentForm";
 import Comments from "./Comments";
 
-const CategoryDetail = (props) => {
-    let showComment = null;
-    console.log(props.category);
-    if (props.loggedUser.loggedUsers.length !== 0) {
-        showComment = <CommentForm userName={props.loggedUser.loggedUsers[0].name}
-            imageId={props.category.id}
-            categoryId={props.category.galleryId}
-        />
-    } else {
-        showComment = <Link to="/login" className="btn btn-primary" replace={true}>Please Login to comment</Link>
+const mapStateToProps = state => {
+    return {
+        loggedUsers: state.loggedUsers
     }
-
-    return (
-        <div>
-            <Card>
-                <CardBody style={{ marginTop: "10px" }}>
-                    <CardImg alt={props.category.name} src={baseUrl + props.category.image} />
-                    <CardTitle>{props.category.name}</CardTitle>
-                    <CardText style={{ textAlign: "left" }}>
-                        {props.category.description}
-                    </CardText>
-                    <hr />
-                    <CardText><strong>Comments:</strong></CardText>
-                    <CardText>
-                        <Comments comments={props.comments} commentsIsLoading={props.commentsIsLoading} />
-                    </CardText>
-                </CardBody>
-                <CardBody>
-                    {showComment}
-                </CardBody>
-            </Card>
-        </div>
-    );
 }
 
-export default CategoryDetail;
+class CategoryDetail extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        let showCommentForm = null;
+        if (this.props.loggedUsers.loggedUsers !== null) {
+            showCommentForm = (<CommentForm userName={this.props.loggedUsers.loggedUsers.name}
+                imageId={this.props.category.id}
+                categoryId={this.props.category.galleryId} />);
+        } else {
+            showCommentForm = <Link to="/login" className="btn btn-primary" replace={true}>Please Login to comment</Link>;
+        }
+        return (
+            <div style={{ marginTop: "30px" }}>
+                <span style={{ fontWeight: "bold" }}>Photo Details</span>
+                <Card>
+                    <CardImg alt={this.props.category.name} src={baseUrl + this.props.category.image} />
+                    <CardImgOverlay>
+                        <CardTitle>
+                            {this.props.category.image}
+                        </CardTitle>
+                    </CardImgOverlay>
+                    <CardBody style={{ marginTop: "10px" }}>
+                        <CardText style={{ textAlign: "left" }}>
+                            {this.props.category.description}
+                        </CardText>
+                        <CardText>
+                            <strong>Comments:</strong>
+                        </CardText>
+                        <CardColumns>
+                            <Comments comments={this.props.comments} commentsIsLoading={this.props.commentsIsLoading} />
+                        </CardColumns>
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardFooter>
+                        {showCommentForm}
+                    </CardFooter>
+                </Card>
+            </div >
+        );
+    }
+}
+
+export default connect(mapStateToProps)(CategoryDetail);
 

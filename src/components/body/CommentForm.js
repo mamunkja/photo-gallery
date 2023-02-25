@@ -1,16 +1,10 @@
-import axios from "axios";
-import { Component } from "react";
-import { connect } from "react-redux";
-import { Control, Form, Errors, actions } from "react-redux-form";
+import React, { Component } from "react";
 import { Alert, Button, Col, FormGroup, Label } from "reactstrap";
+import { Control, Errors, actions, Form } from "react-redux-form";
+import { connect } from "react-redux";
+import axios from "axios";
 import { fetchComments } from "../../redux/actionCreators";
 import { baseUrl } from "../../redux/baseUrl";
-
-const mapStateToProps = state => {
-    return {
-        loggedUsers: state.loggedUsers
-    }
-}
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -24,6 +18,10 @@ const mapDispatchToProps = dispatch => {
 const required = val => val && val.length;
 
 class CommentForm extends Component {
+    constructor(props) {
+        super(props);
+    }
+
     state = {
         showAlert: false,
         alertText: null,
@@ -41,10 +39,10 @@ class CommentForm extends Component {
         vals.imageId = this.props.imageId;
         vals.categoryId = this.props.categoryId;
         vals.date = new Date().toISOString();
+        console.log(vals);
         axios.post(baseUrl + "comments", vals)
-            .then(response => response.status)
-            .then(status => {
-                if (status === 201) {
+            .then(response => {
+                if (response.status === 201) {
                     this.setState({
                         showAlert: true,
                         alertType: "success",
@@ -55,7 +53,7 @@ class CommentForm extends Component {
                     }), 5000);
 
                     this.props.resetCommentForm();
-                    this.fetchComments();
+                    this.props.fetchComments();
                 }
             })
             .catch(error => {
@@ -78,7 +76,7 @@ class CommentForm extends Component {
                 </div>
                 <Form model="commentForm" onSubmit={values => this.handleSubmit(values)}>
                     <FormGroup row>
-                        <Label htmlFor="rating" md={2}>Email</Label>
+                        <Label htmlFor="rating" md={2}>Rating</Label>
                         <Col md={10}>
                             <Control.select model=".rating" name="rating" placeholder="Select Rating"
                                 className="form-control"
@@ -94,7 +92,7 @@ class CommentForm extends Component {
                             </Control.select>
                             <Errors
                                 className="text-danger"
-                                model=".email"
+                                model=".rating"
                                 show="touched"
                                 messages={
                                     {
@@ -129,7 +127,7 @@ class CommentForm extends Component {
                     <FormGroup>
                         <Col md={{ size: 10, offset: 2 }} >
                             <Button type="submit" color="primary">
-                                Put Comment
+                                Publish Comment
                             </Button>
                         </Col>
                     </FormGroup>
@@ -139,4 +137,4 @@ class CommentForm extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommentForm);
+export default connect(null, mapDispatchToProps)(CommentForm);
