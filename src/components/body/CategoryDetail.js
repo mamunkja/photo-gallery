@@ -24,7 +24,7 @@ class CategoryDetail extends Component {
                 imageId={this.props.category.id}
                 categoryId={this.props.category.galleryId} />);
         } else {
-            showCommentForm = <Link to="/login" className="btn btn-primary" replace={true}>Please Login to comment</Link>;
+            showCommentForm = <Link to="/login" className="btn btn-primary" replace={true}>Please Login to Feedback</Link>;
         }
         return (
             <div style={{ marginTop: "30px" }}>
@@ -41,7 +41,7 @@ class CategoryDetail extends Component {
                             {this.props.category.description}
                         </CardText>
                         <CardText>
-                            <strong>Comments:</strong>
+                            <strong>Feedbacks:</strong>
                         </CardText>
                         <CardColumns>
                             <Comments comments={this.props.comments} commentsIsLoading={this.props.commentsIsLoading} />

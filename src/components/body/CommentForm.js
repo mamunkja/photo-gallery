@@ -103,10 +103,10 @@ class CommentForm extends Component {
                         </Col>
                     </FormGroup>
                     <FormGroup row>
-                        <Label htmlFor="comment" md={2}>Comment</Label>
+                        <Label htmlFor="comment" md={2}>Feedback</Label>
                         <Col md={10}>
                             <Control.textarea model=".comment" name="comment"
-                                placeholder="Enter Comment"
+                                placeholder="Enter your feedback"
                                 rows="4"
                                 className="form-control"
                                 validators={{

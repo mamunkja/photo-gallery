@@ -28,9 +28,8 @@ class SignupForm extends Component {
     handleSubmit = values => {
         console.log(values);
         axios.post(baseUrl + "signup", values)
-            .then(response => response.status)
-            .then(status => {
-                if (status === 201) {
+            .then(response => {
+                if (response.status === 201) {
                     this.setState({
                         showAlert: true,
                         alertType: "success",
@@ -61,7 +60,7 @@ class SignupForm extends Component {
             <div className="container">
                 <div className="row row-content" style={{ paddingLeft: "20px", textAlign: "left" }}>
                     <div className="col-12">
-                        <Alert isOpen={this.state.showAlert} color={this.state.alertType}>{this.state.alertText + " " + this.state.userName}</Alert>
+                        <Alert isOpen={this.state.showAlert} color={this.state.alertType}>{this.state.alertText}</Alert>
                         <h3>Sign Up</h3>
                     </div>
                     <div className="col-12 col-md-7">

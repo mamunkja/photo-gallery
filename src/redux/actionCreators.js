@@ -107,13 +107,14 @@ export const addToLoggedUser = (name, telNum, email, id) => dispatch => {
         name: name,
         telNum: telNum,
         email: email,
+        id: id,
         date: new Date().getTime()
     };
     axios.post(baseUrl + "logged", newUser)
         .then(response => {
             dispatch({
                 type: actionType.ADD_LOGGED_USER,
-                payload: { ...newUser, id }
+                payload: { ...newUser }
             })
         })
         .catch(error => {
@@ -121,14 +122,21 @@ export const addToLoggedUser = (name, telNum, email, id) => dispatch => {
         })
 }
 
-export const logout = (id) => dispatch => {
-    axios.delete(baseUrl + "logged/" + id)
+export const logoutUserFailed = (errMessage) => ({
+    type: actionType.LOGOUT_USER_FAILED,
+    payload: errMessage
+})
+
+export const logout = userId => dispatch => {
+    axios.delete(baseUrl + "logged/" + userId)
         .then(response => {
-            dispatch({
-                type: actionType.LOGOUT_USER
-            })
+            if (response.status == 200) {
+                dispatch({
+                    type: actionType.LOGOUT_USER
+                })
+            }
         })
         .catch(error => {
-            dispatch(loadingLoggedUserFailed(error.message))
+            dispatch(logoutUserFailed(error.message))
         })
 }

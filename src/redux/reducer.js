@@ -94,12 +94,14 @@ const loggedUserReducer = (loggedUserState = { loggedUsers: null }, action) => {
             }
             return {
                 ...loggedUserState,
-                loggedUsers: action.payload[0]
+                loggedUsers: action.payload[0],
+                errMess: null
             };
         case actionType.ADD_LOGGED_USER:
             return {
                 ...loggedUserState,
-                loggedUsers: action.payload
+                loggedUsers: action.payload,
+                errMess: null
             };
         case actionType.LOGGEDIN_USER_FAILED:
             return {
@@ -107,10 +109,16 @@ const loggedUserReducer = (loggedUserState = { loggedUsers: null }, action) => {
                 errMess: action.payload,
                 loggedUsers: null
             }
+        case actionType.LOGOUT_USER_FAILED:
+            return {
+                ...loggedUserState,
+                errMess: action.payload
+            }
         case actionType.LOGOUT_USER:
             return {
                 ...loggedUserState,
-                loggedUsers: null
+                loggedUsers: null,
+                errMess: null
             }
         default:
             return loggedUserState;
